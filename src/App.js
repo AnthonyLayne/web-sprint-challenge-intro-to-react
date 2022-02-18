@@ -1,43 +1,35 @@
 import React, { useState, useEffect } from "react";
-import "./App.css";
 import axios from "axios";
-import { handlers } from "./mocks/handlers";
+
+// Components
+import Character from "./components/Character";
+
+import "./App.css";
 
 const App = () => {
-  const [data, setData] = useState();
-  console.log("hello");
+  const [starWarsCharacters, setStarWarsCharacters] = useState();
 
   useEffect(() => {
     axios
       .get("https://swapi.dev/api/people")
-
       .then((res) => {
-        console.log(res.data);
+        console.log("keph", res.data);
 
-        setData(res.data);
+        setStarWarsCharacters(res.data);
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch(console.error);
   }, []);
-  // Try to think through what state you'll need for this app before starting. Then build out
-  // the state properties here.
 
-  // Fetch characters from the API in an effect hook. Remember, anytime you have a
-  // side effect in a component, you want to think about which state and/or props it should
-  // sync up with, if any.
+  if (!starWarsCharacters) return <div>Loading...</div>;
 
+  // 1. Build a React component named 'Character' to render an individual character.
+  // 2. Map over the list in state, and for each character render a Character to the page.
   return (
     <div className="App">
       <h1 className="Header">Star Wars Characters</h1>
-      {handlers.map((data) => {
-        return (
-          <article>
-            <h2>{data.name}</h2>
-            <p>{data.height}</p>
-          </article>
-        );
-      })}
+      {starWarsCharacters.map((eachCharacter) => (
+        <Character key={eachCharacter.name} name={eachCharacter.name} />
+      ))}
     </div>
   );
 };
